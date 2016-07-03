@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.shop.seller.ProductMapper">
+
+	<resultMap type="com.project.shop.seller.Product" 
+	id="ProductResultMap">
+		<result property="prod_num" column="PROD_NUM" />
+		<result property="prod_name" column="PROD_NAME" />
+		<result property="prod_cnt" column="PROD_CNT" />
+		<result property="prod_content" column="PROD_CONTENT" />
+		<result property="prod_sellcnt" column="PROD_SELLCNT" />
+		<result property="id" column="ID" />
+		<result property="prod_price" column="PROD_PRICE" />
+		<result property="prod_image1" column="PROD_IMAGE1" />
+		
+	</resultMap>
+
+	<select id="insertProd" parameterType="com.project.shop.seller.Product">
+		INSERT INTO product(PROD_NUM, PROD_NAME, PROD_CNT, PROD_CONTENT, PROD_SELLCNT, ID, PROD_PRICE, PROD_IMAGE1) 
+		VALUES (seq_prod.nextval, #{prod_name}, #{prod_cnt}, #{prod_content}, #{prod_sellcnt}, #{id}, #{prod_price}, #{prod_image1})
+	</select>
+	
+	
+	<select id="selectProd" resultMap="ProductResultMap">
+		SELECT * FROM product 
+	</select>
+	<select id="select" resultMap="ProductResultMap" parameterType="int">
+		SELECT * FROM product WHERE prod_num=#{num} ORDER BY prod_num DESC
+	</select>
+	
+   <select id="selectUpperprod_price" resultMap="ProductResultMap">
+      SELECT * FROM product Order by prod_price desc
+   </select>
+
+   <select id="selectUpperprod_sellcnt" resultMap="ProductResultMap">
+      SELECT * FROM product Order by prod_sellcnt desc
+   </select>
+
+
+   
+   <select id="selectProdByName" resultMap="ProductResultMap" parameterType="String">
+      SELECT * FROM product WHERE prod_name LIKE  '%'||#{prod_name}||'%'
+   </select>
+   
+   <select id="selectProdByCont" resultMap="ProductResultMap" parameterType="String">
+      SELECT * FROM product WHERE prod_content LIKE '%'||#{prod_content}||'%'
+   </select>
+	
+	<select id="selectProdById" resultMap="ProductResultMap" parameterType="String">
+		SELECT * FROM product WHERE id = #{id}
+	</select>
+	
+	<select id="selectProdByNum" resultMap="ProductResultMap" parameterType="int">
+		SELECT * FROM product WHERE prod_num = #{num}
+	</select>
+	
+	<delete id="deletePROD" parameterType="int">
+		DELETE board WHERE prod_num=#{num}
+	</delete>
+
+	<update id="updateProdAsCnt" parameterType="hashmap">
+		UPDATE product SET prod_sellcnt=prod_sellcnt+#{cnt} WHERE prod_num = #{num}
+	</update>
+	
+	
+	
+	<update id="updateProd" parameterType="com.project.shop.seller.Product">
+		update product set prod_name=#{prod_name,  jdbcType=VARCHAR},prod_cnt=#{prod_cnt,  jdbcType=INTEGER},prod_content=#{prod_content,  jdbcType=VARCHAR},prod_price=#{prod_price, jdbcType=INTEGER} where prod_num=#{prod_num, jdbcType=INTEGER}
+	</update>
+	
+	<resultMap type="com.project.shop.buyer.Buy" 
+		id="BuyResultMap">
+		<result property="buy_num" column="buy_num" />
+		<result property="id" column="id" />
+		<result property="prod_num" column="prod_num" />
+		<result property="buy_cnt" column="buy_cnt" />
+		<result property="buy_date" column="buy_date" />
+		<result property="buy_pay" column="buy_pay" />
+	</resultMap>
+
+	<select id="selectByPay" resultMap="BuyResultMap" parameterType="String">
+      SELECT * FROM BUY b join PRODUCT p on b.prod_num = p.prod_num WHERE b.PROD_NUM = ANY(SELECT p.PROD_NUM FROM PRODUCT p WHERE p.ID = #{id}) order by b.buy_date
+   </select>
+	<update id="UpdateByPay" parameterType="int">
+		update buy set buy_pay=3 where buy_num=#{buy_num, jdbcType=INTEGER}
+	</update>
+</mapper>

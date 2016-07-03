@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.shop.member.MemberMapper">
+
+	<!-- member class의 name컬럼의 값은 name에다 서로 매칭을 해라. -->
+	<resultMap type="com.project.shop.member.Member"  id="MemberResultMap">
+		<result property="id" column="id" />
+		<result property="pwd" column="pwd" />
+		<result property="name" column="name" />
+		<result property="email" column="email" />
+		<result property="tel" column="tel" />
+		<result property="address" column="address" />
+		<result property="type" column="type" />
+	</resultMap>
+
+	<select id="getMember" parameterType="String" resultMap="MemberResultMap">
+		select * from member where id=#{id}
+		
+	</select>
+
+	
+	<insert id="insertMember" parameterType="com.project.shop.member.Member">
+		insert into member
+		values(#{id, jdbcType=VARCHAR},#{pwd, jdbcType=VARCHAR}, #{email, jdbcType=VARCHAR}, #{tel, jdbcType=VARCHAR}, #{address, jdbcType=VARCHAR}, #{type, jdbcType=INTEGER}, #{name, jdbcType=VARCHAR})
+	</insert>
+
+
+	<update id="updateMember" parameterType="com.project.shop.member.Member">
+		update member set email=#{email, jdbcType=VARCHAR}, tel = #{tel, jdbcType=VARCHAR}, address=#{address, jdbcType=VARCHAR}, name=#{name, jdbcType=VARCHAR}, pwd= #{pwd, jdbcType=VARCHAR}
+		where id=#{id}
+	</update>
+
+	<delete id="deleteMember" parameterType="String">
+		delete member where id=#{id}
+	</delete>
+
+</mapper>

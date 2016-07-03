@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.shop.buyer.BuyerMapper">
+
+
+
+
+	<!-- CART 파트 -->
+	<resultMap type="com.project.shop.buyer.Cart" id="CartResultMap">
+
+		<result property="cart_num" column="cart_num" />
+		<result property="prod_num" column="prod_num" />
+		<result property="id" column="id" />
+		<result property="cart_cnt" column="cart_cnt" />
+		<result property="prod_price" column="prod_price" />
+		<result property="seller_id" column="seller_id" />
+		<result property="prod_name" column="prod_name" />
+		<result property="prod_image1" column="prod_image1" />
+
+
+	</resultMap>
+
+
+	<insert id="insertCart" parameterType="com.project.shop.buyer.Cart">
+		INSERT INTO cart(CART_NUM,
+		ID, PROD_NUM, CART_CNT)
+		VALUES (seq_cart.nextval, #{id}, #{prod_num},
+		#{cart_cnt})
+	</insert>
+
+
+
+	<delete id="deleteCart" parameterType="int">
+
+
+		DELETE FROM cart WHERE
+		cart_num=#{cart_num}
+	</delete>
+
+
+	<select id="selectCart" resultMap="CartResultMap" parameterType="String">
+		SELECT c.CART_NUM cart_num, c.PROD_NUM prod_num, c.ID id, c.CART_CNT
+		cart_cnt, p.PROD_PRICE prod_price, p.ID seller_id, p.PROD_NAME
+		prod_name, p.PROD_IMAGE1 prod_image1
+		FROM CART c JOIN PRODUCT p ON
+		p.PROD_NUM = c.PROD_NUM WHERE c.ID=#{id}
+
+	</select>
+	<select id="selectCartByNum" resultMap="CartResultMap"
+		parameterType="int">
+		SELECT c.CART_NUM cart_num, c.PROD_NUM prod_num, c.ID
+		id, c.CART_CNT
+		cart_cnt, p.PROD_PRICE prod_price, p.ID seller_id,
+		p.PROD_NAME
+		prod_name, p.PROD_IMAGE1 prod_image1
+		FROM CART c JOIN
+		PRODUCT p ON p.PROD_NUM = c.PROD_NUM WHERE
+		c.CART_NUM=#{cart_num}
+
+	</select>
+
+
+
+	<!-- BUY 파트 -->
+	<resultMap type="com.project.shop.buyer.Buy" id="BuyResultMap">
+		<result property="buy_num" column="buy_num" />
+		<result property="id" column="id" />
+		<result property="prod_num" column="prod_num" />
+		<result property="buy_cnt" column="buy_cnt" />
+		<result property="buy_date" column="buy_date" />
+		<result property="buy_pay" column="buy_pay" />
+		<result property="prod_price" column="prod_price" />
+		<result property="seller_id" column="seller_id" />
+		<result property="prod_name" column="prod_name" />
+		<result property="prod_image1" column="prod_image1" />
+	</resultMap>
+
+	<delete id="deleteBuy" parameterType="int">
+		delete buy where
+		buy_num=#{buy_num}
+	</delete>
+
+	<insert id="insertBuy" parameterType="com.project.shop.buyer.Buy">
+		INSERT INTO buy(BUY_NUM,
+		ID, PROD_NUM, BUY_CNT, BUY_DATE, BUY_PAY)
+		VALUES (seq_buy.nextval,
+		#{id}, #{prod_num},
+		#{buy_cnt}, sysdate, #{buy_pay})
+
+	</insert>
+
+
+	<select id="selectBuy" resultMap="BuyResultMap" parameterType="String">
+		SELECT b.BUY_NUM buy_num, b.ID id, b.PROD_NUM prod_num, b.BUY_CNT buy_cnt, b.BUY_DATE buy_date, 
+		b.BUY_PAY buy_pay, p.PROD_PRICE prod_price, p.ID seller_id, p.PROD_NAME prod_name, p.PROD_IMAGE1 prod_image1 
+		FROM BUY b JOIN PRODUCT p ON p.PROD_NUM = b.PROD_NUM WHERE b.ID = #{id}
+
+
+	</select>
+	
+	<select id="selectBuyByNum" resultMap="BuyResultMap" parameterType="int">
+		SELECT * FROM buy WHERE buy_num = #{buy_num}
+	</select>
+
+	<resultMap type="com.project.shop.buyer.Comment" id="CommentResultMap">
+
+		<result property="cmt_num" column="cmt_num" />
+
+		<result property="id" column="id" />
+
+		<result property="prod_num" column="prod_num" />
+
+		<result property="cmt_score" column="cmt_score" />
+
+		<result property="cmt_comment" column="cmt_comment" />
+
+	</resultMap>
+
+	
+
+	<insert id="insertCmt" parameterType="com.project.shop.buyer.Comment">
+
+		INSERT INTO COMMENT1
+
+		VALUES (seq_cmt.nextval,#{cmt_comment},#{cmt_score},#{id},#{prod_num})
+
+	</insert>
+
+	
+
+	<delete id="deleteCmt" parameterType="int">
+
+		delete comment1 where
+
+		cmt_num=#{cmt_num}
+
+	</delete> 
+
+	
+
+	<select id="selectCmt" resultMap="CommentResultMap" parameterType="int">
+
+		SELECT *
+
+		FROM comment1
+
+		where prod_num = #{prod_num}
+
+	</select>
+	
+	<update id="UpdateByPay" parameterType="int">
+		update buy set buy_pay=1 where buy_num=#{buy_num, jdbcType=INTEGER}
+	</update>
+
+		<update id="UpdateByPay2" parameterType="int">
+		update buy set buy_pay=2 where buy_num=#{buy_num, jdbcType=INTEGER}
+	</update>
+
+</mapper>
+	
+	 
